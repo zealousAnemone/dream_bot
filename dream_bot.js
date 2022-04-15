@@ -22,30 +22,39 @@ const truncateDream = (dream) => {
   }
 };
 
-const tweetDream = async function (dream, timestamp, nonce) {
-  // const params = {
-  //   oauth_consumer_key: process.env.CONSUMER_KEY,
-  //   oauth_token: process.env.ACCESS_TOKEN,
-  //   oauth_nonce: process.env.OAUTH_NONCE,
-  //   oauth_timestamp: process.env.OAUTH_TIMESTAMP,
-  //   oauth_signature_method: 'HMAC-SHA1',
-  //   oauth_version: '1.0'
-  // };
-  // const signature = oauthSignature.generate(
-  //   'POST',
-  //   '/2/tweets',
-  //   params
-  //   process.env.CONSUMER_SECRET,
-  //   process.env.TOKEN_SECRET,
-  //
-  // );
+const tweetDream = async function (dream) {
+  const random_source =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let nonce = '';
+  for (let i = 0; i < 32; i++) {
+    nonce += random_source.charAt(
+      Math.floor(Math.random() * random_source.length)
+    );
+  }
+  const timestamp = Math.round(Date.now() / 1000);
+
+  const params = {
+    oauth_consumer_key: process.env.CONSUMER_KEY,
+    oauth_token: process.env.ACCESS_TOKEN,
+    oauth_nonce: nonce,
+    oauth_timestamp: timestamp,
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_version: '1.0',
+  };
+  const signature = oauthSignature.generate(
+    'POST',
+    'https://api.twitter.com/2/tweets',
+    params,
+    process.env.CONSUMER_SECRET,
+    process.env.TOKEN_SECRET
+  );
 
   var options = {
     method: 'POST',
     hostname: 'api.twitter.com',
     path: '/2/tweets',
     headers: {
-      Authorization: `OAuth oauth_consumer_key="${process.env.CONSUMER_KEY}",oauth_token="${process.env.ACCESS_TOKEN}",oauth_signature_method="HMAC-SHA1",oauth_timestamp="${process.env.OAUTH_TIMESTAMP}",oauth_nonce="${process.env.OAUTH_NONCE}",oauth_version="1.0",oauth_signature="${process.env.OAUTH_SIGNATURE}"`,
+      Authorization: `OAuth oauth_consumer_key="${process.env.CONSUMER_KEY}",oauth_token="${process.env.ACCESS_TOKEN}",oauth_signature_method="HMAC-SHA1",oauth_timestamp="${timestamp}",oauth_nonce="${nonce}",oauth_version="1.0",oauth_signature="${signature}"`,
       'Content-Type': 'application/json',
     },
   };
@@ -86,11 +95,8 @@ async function getDream() {
     presence_penalty: 1.1,
   });
   const truncatedDream = truncateDream(response.data.choices[0].text);
-  const timestamp = Math.round(Date.now() / 1000);
-  const nonce = Buffer.from(process.env.CONSUMER_KEY, timestamp).toString(
-    'base64'
-  );
-  tweetDream(`Last night, I dreamed${truncatedDream}`, timestamp, nonce);
+
+  tweetDream(`Last night, I dreamed${truncatedDream}`);
 }
 
 getDream();
