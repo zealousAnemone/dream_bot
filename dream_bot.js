@@ -10,8 +10,14 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const truncateDream = (dream) => {
+  if (dream.length > 280) {
+    dream = dream.slice(0, 280);
+  }
   const dreamArr = dream.split('');
-  if (dreamArr[dream.length - 1] !== '.') {
+  if (
+    dreamArr[dream.length - 1] !== '.' &&
+    dreamArr[dream.length - 1] !== '"'
+  ) {
     for (let i = dreamArr.length - 2; i > 0; i--) {
       if (dreamArr[i] === '.') {
         return dream.slice(0, i + 1);
@@ -86,10 +92,10 @@ const tweetDream = async function (dream) {
 };
 async function getDream() {
   const response = await openai.createCompletionFromModel({
-    model: 'davinci:ft-personal-2022-04-09-19-12-54',
+    model: 'curie:ft-personal-2022-04-16-17-13-47',
     prompt: 'Last night, I dreamed',
     temperature: 0.75,
-    max_tokens: 50,
+    max_tokens: 80,
     top_p: 1,
     frequency_penalty: 1.06,
     presence_penalty: 1.1,
