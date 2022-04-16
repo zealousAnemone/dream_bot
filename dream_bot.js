@@ -88,7 +88,7 @@ async function getDream() {
   const response = await openai.createCompletionFromModel({
     model: 'davinci:ft-personal-2022-04-09-19-12-54',
     prompt: 'Last night, I dreamed',
-    temperature: 0.4,
+    temperature: 0.75,
     max_tokens: 50,
     top_p: 1,
     frequency_penalty: 1.06,
