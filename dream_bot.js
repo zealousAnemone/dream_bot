@@ -100,9 +100,11 @@ async function getDream() {
     frequency_penalty: 1.06,
     presence_penalty: 1.1,
   });
-  const truncatedDream = truncateDream(response.data.choices[0].text);
+  const truncatedDream = truncateDream(
+    `Last night, I dreamed${response.data.choices[0].text}`
+  );
 
-  tweetDream(`Last night, I dreamed${truncatedDream}`);
+  tweetDream(truncatedDream);
 }
 
 getDream();
