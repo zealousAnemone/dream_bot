@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const oauthSignature = require('oauth-signature');
 const { Configuration, OpenAIApi } = require('openai');
+// const http = require('http');
 const https = require('follow-redirects').https;
 
 const configuration = new Configuration({
@@ -55,7 +56,7 @@ const tweetDream = async function (dream) {
     process.env.TOKEN_SECRET
   );
 
-  var options = {
+  const options = {
     method: 'POST',
     hostname: 'api.twitter.com',
     path: '/2/tweets',
@@ -65,24 +66,18 @@ const tweetDream = async function (dream) {
     },
   };
 
-  var req = https.request(options, function (res) {
-    var chunks = [];
-
-    res.on('data', function (chunk) {
-      chunks.push(chunk);
-    });
-
-    res.on('end', function (chunk) {
-      var body = Buffer.concat(chunks);
+  const req = https.request(options, (res) => {
+    res.on('data', (chunk) => {
+      const body = chunk;
       console.log(body.toString());
     });
 
-    res.on('error', function (error) {
+    res.on('error', (error) => {
       console.error(error);
     });
   });
 
-  var postData = JSON.stringify({
+  const postData = JSON.stringify({
     text: dream,
   });
 
