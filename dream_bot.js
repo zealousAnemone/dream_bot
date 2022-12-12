@@ -86,6 +86,7 @@ const tweetDream = async function (dream) {
   req.end();
 };
 async function getDream() {
+  console.log('test');
   const response = await openai.createCompletionFromModel({
     model: 'curie:ft-personal-2022-04-16-17-13-47',
     prompt: 'Last night, I dreamed',
