@@ -1,7 +1,13 @@
 name: Tweet dream
+env:
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+  CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
 on:
   schedule:
-    - cron: 0 13 * * *
+    - cron: 20 * * * *
 jobs:
   tweet:
     runs-on: ubuntu-latest
