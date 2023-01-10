@@ -7,7 +7,7 @@ env:
   TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
 on:
   schedule:
-    - cron: 20 * * * *
+    - cron: 0 13 * * *
 jobs:
   tweet:
     runs-on: ubuntu-latest
